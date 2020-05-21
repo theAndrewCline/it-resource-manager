@@ -1,41 +1,52 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 
-	_ "github.com/mattn/go-sqlite3"
+	"github.com/google/uuid"
 )
 
 type Computer struct {
-	ID    int64  `json:"id"`
-	Owner string `json:"owner"`
+	ID          uuid.UUID `db:"id"`
+	OwnerID     uuid.UUID `db:"owner_id"`
+	Description string    `db:"description"`
 }
 
-func checkError(err error) {
-	if err != nil {
-		panic(err)
-	}
-	// catch to error.
+type Part struct {
+	ID          uuid.UUID `db:"id"`
+	Name        string    `db:"name"`
+	ModelNumber string    `db:"model number"`
 }
 
-func addUser(db *sql.DB, desription string, owner string) {
-	tx, _ := db.Begin()
-	stmt, _ := tx.Prepare("insert into computers (description,owner) values (?,?)")
-	_, err := stmt.Exec(desription, owner)
-	checkError(err)
-	tx.Commit()
+type Owner struct {
+	ID   uuid.UUID `db:"id"`
+	name string    `db:"name"`
+}
+
+type ComputerStore interface {
+	Computer(id uuid.UUID) (Computer, error)
+	Computers() ([]Computer, error)
+	CreateComputer(c *Computer) error
+	UpdateComputer(c *Computer) error
+	DeleteComputer(id uuid.UUID) error
+}
+
+type OwnerStore interface {
+	Owner(id uuid.UUID) (Owner, error)
+	Owners() ([]Owner, error)
+	CreateOwner(c *Owner) error
+	UpdateOwner(c *Owner) error
+	DeleteOwner(id uuid.UUID) error
+}
+
+type PartStore interface {
+	Part(id uuid.UUID) (Part, error)
+	Parts() ([]Part, error)
+	CreatePart(c *Part) error
+	UpdatePart(c *Part) error
+	DeletePart(id uuid.UUID) error
 }
 
 func main() {
 	fmt.Println("Hello, It Manager")
-
-	db, _ := sql.Open("sqlite3", "database/computers.db")
-	db.Exec("create table if not exists computers (id integer not null primary key autoincreament,owner text,description text)")
-
-	fmt.Println("Your database is ready!")
-
-	addUser(db, "Super Beast", "Norbert")
-
-	fmt.Println("Your database is ready!")
 }

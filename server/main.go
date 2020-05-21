@@ -6,6 +6,11 @@ import (
 	"github.com/google/uuid"
 )
 
+type Owner struct {
+	ID   uuid.UUID `db:"id"`
+	name string    `db:"name"`
+}
+
 type Computer struct {
 	ID          uuid.UUID `db:"id"`
 	OwnerID     uuid.UUID `db:"owner_id"`
@@ -18,9 +23,12 @@ type Part struct {
 	ModelNumber string    `db:"model number"`
 }
 
-type Owner struct {
-	ID   uuid.UUID `db:"id"`
-	name string    `db:"name"`
+type OwnerStore interface {
+	Owner(id uuid.UUID) (Owner, error)
+	Owners() ([]Owner, error)
+	CreateOwner(c *Owner) error
+	UpdateOwner(c *Owner) error
+	DeleteOwner(id uuid.UUID) error
 }
 
 type ComputerStore interface {
@@ -29,14 +37,6 @@ type ComputerStore interface {
 	CreateComputer(c *Computer) error
 	UpdateComputer(c *Computer) error
 	DeleteComputer(id uuid.UUID) error
-}
-
-type OwnerStore interface {
-	Owner(id uuid.UUID) (Owner, error)
-	Owners() ([]Owner, error)
-	CreateOwner(c *Owner) error
-	UpdateOwner(c *Owner) error
-	DeleteOwner(id uuid.UUID) error
 }
 
 type PartStore interface {

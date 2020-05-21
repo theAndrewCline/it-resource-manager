@@ -1,14 +1,12 @@
-package main
+package manager
 
 import (
-	"fmt"
-
-	"github.com/google/uuid"
+	"github.com/akyoto/uuid"
 )
 
 type Owner struct {
 	ID   uuid.UUID `db:"id"`
-	name string    `db:"name"`
+	Name string    `db:"name"`
 }
 
 type Computer struct {
@@ -19,8 +17,9 @@ type Computer struct {
 
 type Part struct {
 	ID          uuid.UUID `db:"id"`
+	ComputerID  uuid.UUID `db:"computer_id"`
 	Name        string    `db:"name"`
-	ModelNumber string    `db:"model number"`
+	ModelNumber string    `db:"model_number"`
 }
 
 type OwnerStore interface {
@@ -47,6 +46,8 @@ type PartStore interface {
 	DeletePart(id uuid.UUID) error
 }
 
-func main() {
-	fmt.Println("Hello, It Manager")
+type Store interface {
+	OwnerStore
+	ComputerStore
+	PartStore
 }

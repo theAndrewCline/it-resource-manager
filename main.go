@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	store, err := postgres.NewStore("postgres://postgres:secret@localhost/postgres?sslmode=disable")
+	store, err := postgres.NewStore("postgres://postgres:secret@postres/postgres?sslmode=disable")
 	if err != nil {
 		log.Fatal(err)
 	}

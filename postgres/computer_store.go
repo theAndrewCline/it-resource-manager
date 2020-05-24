@@ -5,7 +5,7 @@ import (
 
 	"github.com/akyoto/uuid"
 	"github.com/jmoiron/sqlx"
-	manager "github.com/theAndrewCline/it-resource-manager"
+	"github.com/theAndrewCline/it-resource-manager/types"
 )
 
 // ComputerStore struct for computers table
@@ -14,18 +14,18 @@ type ComputerStore struct {
 }
 
 // Computer gets a computer by ID
-func (s *ComputerStore) Computer(id uuid.UUID) (manager.Computer, error) {
-	var c manager.Computer
+func (s *ComputerStore) Computer(id uuid.UUID) (types.Computer, error) {
+	var c types.Computer
 	err := s.Get(&c, `SELECT * FROM computers WHERE id = $1`, id)
 	if err != nil {
-		return manager.Computer{}, fmt.Errorf("error getting computer: %w", err)
+		return types.Computer{}, fmt.Errorf("error getting computer: %w", err)
 	}
 	return c, nil
 }
 
 // Computers gets all computers
-func (s *ComputerStore) Computers() ([]manager.Computer, error) {
-	var cc []manager.Computer
+func (s *ComputerStore) Computers() ([]types.Computer, error) {
+	var cc []types.Computer
 	err := s.Select(&cc, `SELECT * FROM computers`)
 	if err != nil {
 		return nil, fmt.Errorf("error getting computers: %w", err)
@@ -34,7 +34,7 @@ func (s *ComputerStore) Computers() ([]manager.Computer, error) {
 }
 
 // CreateComputer creates a computer with given struct
-func (s *ComputerStore) CreateComputer(c *manager.Computer) error {
+func (s *ComputerStore) CreateComputer(c *types.Computer) error {
 	err := s.Get(c, `INSERT INTO computers VALUES ($1, $2, $3) RETURNING *`,
 		c.ID,
 		c.OwnerID,
@@ -46,7 +46,7 @@ func (s *ComputerStore) CreateComputer(c *manager.Computer) error {
 }
 
 // UpdateComputer updates a computer with given struct
-func (s *ComputerStore) UpdateComputer(c *manager.Computer) error {
+func (s *ComputerStore) UpdateComputer(c *types.Computer) error {
 	err := s.Get(c, `UPDATE INTO computers SET owner_id = $2 description = $3 WHERE id = $1 RETURNING *`,
 		c.ID,
 		c.OwnerID,

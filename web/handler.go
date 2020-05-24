@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/middleware"
-	manager "github.com/theAndrewCline/it-resource-manager"
 	"github.com/theAndrewCline/it-resource-manager/postgres"
+	"github.com/theAndrewCline/it-resource-manager/types"
 
 	"github.com/go-chi/chi"
 )
@@ -29,7 +29,7 @@ func NewHandler(store *postgres.Store) *Handler {
 // Handler for http requests
 type Handler struct {
 	*chi.Mux
-	store manager.Store
+	store types.Store
 }
 
 // OwnerList handler for getting all the owners

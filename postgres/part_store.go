@@ -5,36 +5,36 @@ import (
 
 	"github.com/akyoto/uuid"
 	"github.com/jmoiron/sqlx"
-	manager "github.com/theAndrewCline/it-resource-manager"
+	"github.com/theAndrewCline/it-resource-manager/types"
 )
 
-// PartStore Implements manager.PartStore interface
+// PartStore Implements types.PartStore interface
 type PartStore struct {
 	*sqlx.DB
 }
 
 // Part returns Part with the matching ID passed to it
-func (s *PartStore) Part(id uuid.UUID) (manager.Part, error) {
-	var p manager.Part
+func (s *PartStore) Part(id uuid.UUID) (types.Part, error) {
+	var p types.Part
 	err := s.Get(&p, `SELECT * FROM parts WHERE id = $1`, id)
 	if err != nil {
-		return manager.Part{}, fmt.Errorf("error getting part: %w", err)
+		return types.Part{}, fmt.Errorf("error getting part: %w", err)
 	}
 	return p, nil
 }
 
 // Parts returns all the parts in the database
-func (s *PartStore) Parts() ([]manager.Part, error) {
-	var pp []manager.Part
+func (s *PartStore) Parts() ([]types.Part, error) {
+	var pp []types.Part
 	err := s.Select(&pp, `SELECT * FROM parts`)
 	if err != nil {
-		return []manager.Part{}, fmt.Errorf("error getting parts: %w", err)
+		return []types.Part{}, fmt.Errorf("error getting parts: %w", err)
 	}
 	return pp, nil
 }
 
 // CreatePart From struct passed to it
-func (s *PartStore) CreatePart(p *manager.Part) error {
+func (s *PartStore) CreatePart(p *types.Part) error {
 	err := s.Get(p, `INSERT INTO parts VALUES ($1, $2, $3, $4) RETURNING *`,
 		p.ID,
 		p.ComputerID,
@@ -47,7 +47,7 @@ func (s *PartStore) CreatePart(p *manager.Part) error {
 }
 
 // UpdatePart updates Part based on struct passed to it
-func (s *PartStore) UpdatePart(p *manager.Part) error {
+func (s *PartStore) UpdatePart(p *types.Part) error {
 	sql := `UPDATE 
 				INTO parts 
 				SET 

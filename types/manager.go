@@ -1,4 +1,4 @@
-package manager
+package types
 
 import (
 	"github.com/akyoto/uuid"

@@ -8,7 +8,7 @@ adminer:
 
 migrate:
 	migrate -source file://migrations \
-			-database postgres://postgres:secret@localhost/postgres?sslmode=disable up 
+			-database postgres://postgres:secret@DOCKER_IP/postgres?sslmode=disable up 
 
 migrate-down:
 	migrate -source file://migrations \

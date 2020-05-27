@@ -16,4 +16,3 @@ CREATE TABLE parts (
     name TEXT NOT NULL,
     model_number TEXT NOT NULL
 );
-
